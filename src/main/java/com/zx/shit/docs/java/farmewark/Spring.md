@@ -96,3 +96,14 @@ Spring中 通过定义bean时的scope属性来定义bean的作用域，主要有
 • 销毁 Destruction
 主要逻辑都在doCreate()方法中，1.createBeanInstance()实例化，2.populateBean()属性赋值，3.initializeBean()初始化 
 4.销毁在容器关闭时调用详见ConfigurableApplicationContext#close()
+
+
+###8.spring mvc 有哪些组件？
+• 前端控制器DispatcherServlet
+• 映射处理器HandlerMapping
+• 处理器Controller
+• 模型和视图ModelAndView
+• 视图解析器ViewResolver
+
+###9.@Autowired 的作用是什么？
+对成员变量、方法及构造函数进行标注，完成自动装配工作，通过@Autowired使用消除get/set方法
