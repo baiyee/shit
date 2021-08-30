@@ -61,7 +61,7 @@ Spring通过提供ORM module，可以让我们在JDBC之上使用一个对象/�
 Spring Web 是构建在application context模块基础之上的，提供一个适合web应用的上下文。
 
 ###4.7ApplicationContext常见的实现是什么？
-• FileSystemXmlApplicationContext：容器从XML加载Bean，XML配置文件加载bean类需要配置全路径，并且构造方法不能私有化。
+• FileSystemXmlApplicationContext：容器从XML加载Beans，XML配置文件加载bean类需要配置全路径，并且构造方法不能私有化。
 • ClassPathXmlApplicationContext：容器从XML加载Beans，Beans类路径需要配置全路径，不然bean加载时会找不到这个类。
 • WebXmlApplicationContext：容器加载一个定义了Web应用的所有Bean。
 
@@ -98,7 +98,7 @@ Spring中 通过定义bean时的scope属性来定义bean的作用域，主要有
 4.销毁在容器关闭时调用详见ConfigurableApplicationContext#close()
 
 
-###8.spring mvc 有哪些组件？
+###8.SpringMVC 有哪些组件？
 • 前端控制器DispatcherServlet
 • 映射处理器HandlerMapping
 • 处理器Controller
@@ -107,3 +107,5 @@ Spring中 通过定义bean时的scope属性来定义bean的作用域，主要有
 
 ###9.@Autowired 的作用是什么？
 对成员变量、方法及构造函数进行标注，完成自动装配工作，通过@Autowired使用消除get/set方法
+
+
