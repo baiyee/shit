@@ -109,3 +109,12 @@ Spring中 通过定义bean时的scope属性来定义bean的作用域，主要有
 对成员变量、方法及构造函数进行标注，完成自动装配工作，通过@Autowired使用消除get/set方法
 
 
+###10.Spring当中怎么解决循环依赖？
+Spring中的Bean是由一个beanDefinition，就是Spring当中有一个建模的类叫BeanDefinition。
+Spring的生命周期，Spring容器启动，会进行扫描.xml @Configuration 注解中的bean 变成beanDefinition 存到BeanDefinitionMap中，
+然后对这个BeanDefinition做一些遍历，遍历完后做一些验证，验证bean是否单例，是否原型，是否懒加载，是否有DepensOn是否抽象，是否是factoryBean，
+是否这个bean名字符合，验证完之后，Spring容器会去获取一遍我们当前实例化的这个类有没有存在单例池当中。有没有被提前加载，没有Spring就会去创建bean，
+通过推断构造方法初始化bean，做beanDefinition的合并。再去做bean生命周期初始化的回调。Bean初始化回调之后，看项目中是否有加AOP，有的话就会调用代理。
+并发布事件。最后bean就存入到单例池当中。
+通过单例的Bean，以及非构造方法注入（懒加载）可以解决循环依赖。当bean的作用域是prototype原型时，是不存在一个已经创建好的bean，所以会
+会无限的A创建-依赖B-创建B-依赖A 进入死循环。

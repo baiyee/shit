@@ -27,13 +27,26 @@ JVM的参数非常之多，这里只列举比较重要的几个，通过各种�
 | -XX:+DisableExplicitGC  | 关闭System.gc()        |         |这个参数需要严格的测试
 | -XX:PretenureSizeThreshold  | 对象超过多大是直接在旧生代分配       | 0      |单位字节 新生代采用Parallel ScavengeGC时无效另一种直接在旧生代分配的情况是大的数组对象,且数组中无外部引用对象.
 
+###1.2Java类信息在JVM内存区域的存储区别？
+• 方法区（Method Area）线程共享 存储类信息
+    ▪ 类类型（class、interface、enum、annotation）
+    ▪ 类全限定名 (java.lang.zx.HelloWorld) 
+    ▪ 类的父类全限定名（java.lang.zx.Father）但不包括java.lang.Object类，其他类型若没有声明父类，默认父类是Object
+    ▪ 类型的修饰符（public、abstract、final的某个子类）.
+    ▪ 类型的直接接口的有序列表理解为将实现的接口变为一个有序列表
+    ▪ 类型的常连池(constant pool)，域(Field)信息，静态方法(static Method)信息，除了常量外的所有静态(static)变量、成员变量。
+• 堆(heap)
+    ▪ 对象实例(new HelloWorld)
+    ▪ 实例变量（非static 修饰的成员变量）和对象关联在一起，所以实例变量也在堆中
+    
+
 ### 1.3 双亲委派模型介绍
 每一个类都有一个对应它的类加载器。系统中的 ClassLoader 在协同工作的时候会默认使用 **双亲委派模型** 。
 即在类加载的时候，系统会首先判断当前类是否被加载过。已经被加载的类会直接返回，否则才会尝试加载。
 加载的时候，首先会把该请求委派给父类加载器的 `loadClass()` 处理，因此所有的请求最终都应该传送到顶层的启动类加载器 `BootstrapClassLoader` 中。
 当父类加载器无法处理时，才由自己来处理。当父类加载器为 null 时，会使用启动类加载器 `BootstrapClassLoader` 作为父类加载器。
 
-##2.JMM是什么？
+##2.Java内存模型（JMM）是什么？
 Java虚拟机中定义了Java内存模型，JMM（Java Memory Model），只是一个概念，用于屏蔽掉各种硬件和操作系统的内存访问差异，
 以实现让Java程序在各种平台下都能达到一致的并发效果，JMM规范Java虚拟机与计算机内存如何协同工作。
 规定一个线程如何何时可以看到其他变量修改过的值，以及在必须时如何同步的访问共享变量。
