@@ -159,12 +159,20 @@ Spring beans 是那些形成Spring应用的主干的java对象。它们被Spring
 • 基于注解的配置。
 • 基于java的配置。
 
-###6.5Spring基于xml注入Bean的几种方式
+###6.5Spring基于xml注入Bean的几种方式？
 1.Set方法注入；
 2.构造器注入：①通过index设置参数的位置；②通过type设置参数类型；
 3.静态工厂注入；
 4.实例工厂；
 
+###6.6Spring中的Bean是线程安全的吗？
+不是，Spring中的Bean默认是单例模式，Spring框架并没有对Bean进行多线程的封装处理，大部分情况下Spring的Bean是无状态的，某种意义上来说也是线程安全。
+当开发者需要用Bean去保存一些数据时，那就要自己去保证线程安全了。
+解决方案：
+1.改变bean的作用域，把single改为prototype，这样请求bean相当于new Bean()也就保证了线程安全。
+2.使用ThreadLocal，使多个线程只访问自己的bean对象副本，这样也不会引发线程安全。
+• 有状态 有数据存储 
+• 无状态 无数据存储
 
 ###7.解释Spring的生命周期？
 • 实例化bean Instantiation 
