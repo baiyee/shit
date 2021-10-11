@@ -39,6 +39,11 @@ SpringBoot是通过复合注解@SpringBootApplicaiton中的@EnableAutoConfigurat
 这个注解会扫描各个符合Spring Boot 标准的Stater中的METE-Inf文件夹下的spring.factories文件，
 将文件中定义的类全限定名，加载到Spring IoC容器中完成自动装配的原理。我们也可以自定义注解的Stater。
 不会去加载所有bean，会根据@ConditionalOnxxx等注解进行条件加载，不符合条件的bean就会被过滤。
+@Import + @Configuration + @Spring spi。
+自动配置类由各个starter提供，使用@Configuration + @Bean定义配置类，放到META-INF/spring.factories文件下。
+使用Spring.spi去扫描META-INF/spring.factories下的配置类。
+使用@Import导入配置类。
+
 
 ![](./pictures/SpringBoot自动配置.png)
 

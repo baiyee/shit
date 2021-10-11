@@ -46,6 +46,15 @@ JVM的参数非常之多，这里只列举比较重要的几个，通过各种�
 加载的时候，首先会把该请求委派给父类加载器的 `loadClass()` 处理，因此所有的请求最终都应该传送到顶层的启动类加载器 `BootstrapClassLoader` 中。
 当父类加载器无法处理时，才由自己来处理。当父类加载器为 null 时，会使用启动类加载器 `BootstrapClassLoader` 作为父类加载器。
 
+### 1.4 Java中有哪些类加载器？
+JDK有自带三个类加载器，BootstrapClassLoader，ExtensionClassLoader，ApplicationClassLoader 
+此外用户可自定义类加载器，UserClassLoader 
+实现方法：
+• 继承java.lang.ClassLoader，重写findClass()方法.
+• 也可继承UserClassLoader，重写LoadClass()方法，
+
+
+
 ##2.Java内存模型（JMM）是什么？
 Java虚拟机中定义了Java内存模型，JMM（Java Memory Model），只是一个概念，用于屏蔽掉各种硬件和操作系统的内存访问差异，
 以实现让Java程序在各种平台下都能达到一致的并发效果，JMM规范Java虚拟机与计算机内存如何协同工作。
@@ -125,6 +134,10 @@ JMM是围绕原子性、有序性、可见性展开的。
 ##3.在Java中，对象什么时候可以被垃圾回收?
 • 引用计数法，当对象没有被任何引用时，即可被回收。
 • 可达性分析法，当对象既没有任何引用，且GCRoot引用链找不到时，即可被回收。
+
+##3.1什么是SWT（stop the world）？
+答：GC执行过程中，用户线程暂停执行的一种状态。除了不能与JVM交互的native方法可执行。GC调优的重点是，减少用户线程停顿的时间，尽量增加系统的吞吐量。
+
 
 ##4.JVM 运行时堆内存如何分代?
 • 新生代,Eden 8/10,Survivor From 1/10,Survivor To 1/10   占用1/3堆空间，用来存放新生的对象，由于频繁创建对象，新生代会频繁触发MinorGC
