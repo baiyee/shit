@@ -10,6 +10,8 @@ Netty is an asynchronous event-driven network application framework ，是一个
 • Netty是基于NIO(Non Blocking I/O模型 )同步非阻塞I/O模型，极大简化TCP和UDP套接字服务器等网络编程，并且性能、安全性方便都很优秀。
 • 平时经常接触的Dubbo、RocketMQ、ElasticSearch、gRPC、Spark等开源项目都用到了Netty。
 • 大部分框架涉及到网络通信的部分，都是使用Netty来做的，Spring Cloud中的Gateway
+• Netty解决了NIO中的epoll导致CPU空转的问题。
+
 
 ### 3.说一下对Netty的认识？
 • Netty是一个基于NIO模型实现的client、server端的网络通信框架，使用它可以快速的简单的开发网络应用程序。
@@ -37,5 +39,5 @@ Netty is an asynchronous event-driven network application framework ，是一个
 ### 7.Netty为什么快？
 Netty依赖了NIO的特性，零拷贝。一般数据拷贝，需要从IO读取到堆内存中，中间经过Socket缓冲区，也就是说一个数据要拷贝两次才能完成拷贝，如果数据量大就会造成浪费。
 Netty的零拷贝，是在接收数据时，不是读取到堆内存中，而是直接在堆内存外开辟一块内存，数据直接从I/O读取到那块内存中，再通过ByteBuf直接对数据进行操作，加快传输速度。
-
+总结：Netty 拷贝时，不经过堆内存，直接将数据通过I/O储存到堆内存以外的内存当中。所以速度快。
 

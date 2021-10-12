@@ -78,3 +78,46 @@ I/O多路复用模式是利用select、poll、epoll可以同时监察多个流�
 • 采用布隆过滤器，通过redis的bitmap位图操作，将可能查询到的数据哈希到bitmap，一定不存在的数据会被bitmap拦截掉，避免了对数据库的查询压力。
 • 如果一个查询的数据为null，将这个null值也存入redis中，并且设置一个短的过期时间，一般不超过5分钟。这种方法简单粗暴。
 
+###7.Redis分布式锁是如何实现的？
+1.首先使用setnx命令来保证：如果key不存在才能获取到锁，如果key存在，则获取不到锁。
+2.然后还要利用lua脚本来保证多放个redis操作的原子性。
+3.同时还要考虑到锁过期，所以需要一个额外的看门狗定时任务来监听锁是否需要续约。
+4.同时还要考虑redis节点挂掉后的情况，所以需要采用红锁的方式来同时向N/2+1个节点申请锁，都申请到了才证明获取锁成功了，这样就算其中某个redis节点挂掉了，锁也不能被其他客户端获取到。
+
+
+###7.1Redis Redisson的实现？
+由于reids + lus脚本的实现有个缺陷是，当redis 过期时间小于程序执行时间时，锁自动释放了又被其他线程获取了，在电商项目中容易发生超卖的问题。
+![](./pictures/Redisson机制实现.jpg)
+Redisson锁机制如上图，线程去获取锁，获取成功则执行Lua脚本，保存数据到redis数据库。
+如果获取失败：一致通过while循环尝试获取锁（可自定义等待时间，超时后返回失败），获取成功后，执行lua脚本，保存数据到数据库。
+Redisson提供的分布式锁是支持自动续期的，也就是说，如果线程仍旧没有执行完，那么redisson会自动给redis中的目标key延长超时时间，这在Redisson中称之为Watch Dog机制。
+同时redisson还有公平锁、读写锁的实现。
+````java
+public class t1{
+    private void redissonDoc() throws InterruptedException {    //1. 普通的可重入锁
+        RLock lock = redissonClient.getLock("generalLock");    // 拿锁失败时会不停的重试
+        // 具有Watch Dog 自动延期机制 默认续30s 每隔30/3=10 秒续到30s
+        lock.lock();    // 尝试拿锁10s后停止重试,返回false
+        // 具有Watch Dog 自动延期机制 默认续30s
+        boolean res1 = lock.tryLock(10, TimeUnit.SECONDS);    // 拿锁失败时会不停的重试
+        // 没有Watch Dog ，10s后自动释放
+        lock.lock(10, TimeUnit.SECONDS);    // 尝试拿锁100s后停止重试,返回false
+        // 没有Watch Dog ，10s后自动释放
+        boolean res2 = lock.tryLock(100, 10, TimeUnit.SECONDS);    //2. 公平锁 保证 Redisson 客户端线程将以其请求的顺序获得锁
+        RLock fairLock = redissonClient.getFairLock("fairLock");    //3. 读写锁 没错与JDK中ReentrantLock的读写锁效果一样
+        RReadWriteLock readWriteLock = redissonClient.getReadWriteLock("readWriteLock");
+        readWriteLock.readLock().lock();
+        readWriteLock.writeLock().lock();
+    }
+}
+````
+
+### 8.Redis主从复制的核心原理？
+Redis主从复制是提高Redis可靠性的有效措施，主从复制的流程如下：
+1.集群启动时，主从库会先建立连接，为全量复制做准备。
+2.主库将所有数据同步给从库，从库收到数据后，在本地完成数据加载，这个过程依赖于内存快照RDB。
+3.在主库将数据同步给从库的过程中，主库不会阻塞，仍然可以正常接收请求。但是这些新请求的写操作并没有记录到刚刚生成的RDB文件中，为了保证主从库的数据一致性，
+主库会在内存中用专门的replication buffer，记录RDB文件生成收到的所有写操作。
+4.最后，主库会把内存中新接收的写命令，再发送给从库。具体操作是，当主库完成RDB文件发送后，就会把replocation buffer中修改操作发送给从库，从库再执行这些操作。
+这样一来，主从库就实现同步了。  
+5.后续主库和从库都可以处理客户端读操作，写操作只能交给主库处理，主库接收到写操作后，还会将写操作发送给从库，实现增量同步。
