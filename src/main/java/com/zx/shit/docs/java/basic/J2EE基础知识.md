@@ -254,7 +254,7 @@ jsonp：JSON with Padding，它是利用script标签的 src 连接可以访问�
 因此会带来不可忽视的性能问题。所以有了ConcurrentHashMap，在进行读操作时几乎不用加锁，进行写操作时，通过锁分段技术只对所操作的段加锁而不影响客户端对其他段的访问。
 
 ## 9.1ConcurrentHashMap的设计？
-concurrentHashMap默认初始容量：16
+concurrentHashMap默认初始容量：16  根据任务量来定，因为固定容量涉及到扩容，需要消耗性能。
 concurrentHashMap 有个重要的变量 sizeCtl，0时表示数组未初始化，数组未初始化，默认初始容量16，初始化后记录数组扩容阈值(初始容量*0.75)
 -1时，表示数组正在初始化，其他线程无法再次初始化，其他负数时，表示正在扩容。
 
