@@ -128,6 +128,10 @@ BeanFactory和ApplicationContext都是Spring内的两大核心接口，都可以
 BeanFactory：Spring最底层接口，包含各种bean定义，读取bean配置文件，bean加载实例化，控制bean的生命周期，维护bean直接的依赖关系。
 ApplicationContext：bean的派生类，除了有bean的具有的功能外，还提供了更完整地框架功能：
 
+###4.9 BeanFactory和FactoryBean有什么区别？
+BeanFactory是创建IOC容器也是Bean工厂对象，里面有一些上下文对象的实现。对Bean对象进行管理。
+FactoryBean是一个特殊的Bean对象，能够生产和装饰对象生成的工厂Bean，和装饰器模式类似。
+
 ###5.如何给 Spring 容器提供配置元数据?
 1.基于XML配置，注解配置，java配置。
 
