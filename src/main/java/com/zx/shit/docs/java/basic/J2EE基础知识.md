@@ -86,6 +86,12 @@ java分为Connection 和 Map 两大类，其下有很多子类。
     ▪ ConcurrentHashMap
     ▪ Hashtable
     ▪ SortedMap
+    
+## 1.1HashMap和HashTable的区别？
+• 数据存储时，HashMap的key和value都可为null，HashTable不允许为null。
+• 是否线程安全，HashMap不为线程安全，HashTable为线程安全。
+• 效率，HashMap不加锁效率高，HashTable加锁，锁整个数组表，效率低。不建议使用。
+
 
 ## 2.Collection和Collections的区别？
 Collection是接口，是所有集合的父类，提供了对集合对象进行基本操作的抽象方法，如size(),iterator(),add(),remove()等
@@ -201,9 +207,13 @@ session 的工作原理是客户端登录完成之后，服务器会创建对应
 CSRF:Cross-Site Request Forgery (中午：跨站请求伪造),可理解为攻击者盗用你身份，以你的名义发送恶意请求.
 比如说以你的名义发送邮件、发消息、虚拟货币转账、购买商品等。
 预防手段：
-• 验证请求来源地址 ss
-• 关键操作添加验证码
-• 请求地址加上token并验证
+• 验证请求来源地址，通过请求头中加origin 标识来源 
+• 关键操作添加验证码，校验请求来源。
+• 添加Token + 双重Cookie检查 来确保是同一个用户发起的请求。
+
+##10.Java序列化是什么？什么情况需要序列化？
+Java序列化就是保存对象到内存中的状态，反序列化就是将内存中的对象状态提取到程序中。
+当RMI调用，Socket传输，以及保存对象到数据库或文件中时需要对象序列化。
 
 #异常、网络和设计模式
 ##1.常见的异常类有哪些？
