@@ -92,6 +92,9 @@ java分为Connection 和 Map 两大类，其下有很多子类。
 • 是否线程安全，HashMap不为线程安全，HashTable为线程安全。
 • 效率，HashMap不加锁效率高，HashTable加锁，锁整个数组表，效率低。不建议使用。
 
+# 1.2List和Set的区别？
+• List：有序，按照对象插入的顺序保存对象，可重复，允许多个Null元素对象，可以使用iterator取出所有元素，可通过get(int index)获取下标
+• Set： 无序，不可重复，最多允许有一个Null元素对象，取元素需要用iterator迭代遍历各个元素。
 
 ## 2.Collection和Collections的区别？
 Collection是接口，是所有集合的父类，提供了对集合对象进行基本操作的抽象方法，如size(),iterator(),add(),remove()等
