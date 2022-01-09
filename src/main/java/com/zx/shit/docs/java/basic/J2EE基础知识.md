@@ -276,8 +276,14 @@ jsonp：JSON with Padding，它是利用script标签的 src 连接可以访问�
 
 
 ## 9. ConcurrentHashMap？
-• 因为 HashMap不是线程安全的，可以使用Collections.synchronizedMap()方法来包装我们的HashMap。但是这是通过一个全局的锁来同步不同线程间的并发访问，
-因此会带来不可忽视的性能问题。所以有了ConcurrentHashMap，在进行读操作时几乎不用加锁，进行写操作时，通过锁分段技术只对所操作的段加锁而不影响客户端对其他段的访问。
+• jdk1.7
+    数据结构：ReentrantLock+ Segment + HashEntry，一个Segment包含一个HashEntry数组，每个HashEntry又是一个链表结构。
+    元素查询：二次hash，第一次hash定位到Segment中下标的位置，第二次hash定位到元素所在的链表头部。
+    锁：Segment分段锁 Segment是ReentrantLock实现类，添加元素时锁定Segment，其他Segment不受影响，并发度为Segment个数，可以通过构造函数指定，
+    数组扩容不会影响其他Segment，get方法无需加锁，volatile 保证有序性和可见性。 
+• jdk1.8
+    数据结构：synchronized+CAS+Node+红黑树， Node的value和next都是volatile修饰，保证可见性，查找，替换，添加操作都是使用CAS代替锁。
+    锁：锁连败哦的head节点，不影响其他元素读写，锁粒度更细，效率更高，扩容时，会阻塞所有读写操作，避免树化操作。
 
 ## 9.1ConcurrentHashMap的设计？
 concurrentHashMap默认初始容量：16  根据任务量来定，因为固定容量涉及到扩容，需要消耗性能。

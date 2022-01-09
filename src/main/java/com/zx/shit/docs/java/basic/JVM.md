@@ -48,6 +48,9 @@ JVM的参数非常之多，这里只列举比较重要的几个，通过各种�
 
 ### 1.4 Java中有哪些类加载器？
 JDK有自带三个类加载器，BootstrapClassLoader，ExtensionClassLoader，ApplicationClassLoader 
+• BootstrapClassLoader 负责加载%JAVA_HOME%lib下的jar包和class类
+• ExtensionClassloader 负责加载%JAVA_HOME%ext文件夹下的jar包和class类
+• ApplicationClassLoader 负责加载classpath下的jar包和class类。
 此外用户可自定义类加载器，UserClassLoader 
 实现方法：
 • 继承java.lang.ClassLoader，重写findClass()方法.
@@ -133,7 +136,8 @@ JMM是围绕原子性、有序性、可见性展开的。
 
 ##3.在Java中，对象什么时候可以被垃圾回收?
 • 引用计数法，当对象没有被任何引用时，即可被回收。
-• 可达性分析法，当对象既没有任何引用，且GCRoot引用链找不到时，即可被回收。
+• 可达性分析法，当对象既没有任何引用，且GCRoot引用链找不到时，即可被回收。（对象不是立即被回收，而是经历过两次被标记过程，
+第一次是经过可达性分析发现没有和GCRoot引用链引用，第二个是被虚拟机自动建立的finalizer()是否覆盖，未覆盖则回收。）
 
 ##3.1什么是SWT（stop the world）？
 答：GC执行过程中，用户线程暂停执行的一种状态。除了不能与JVM交互的native方法可执行。GC调优的重点是，减少用户线程停顿的时间，尽量增加系统的吞吐量。
