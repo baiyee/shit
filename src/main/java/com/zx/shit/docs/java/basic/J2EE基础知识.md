@@ -102,7 +102,7 @@ Collections是工具类，构造方法私有，无法实例化。包含很多静
     
 ## 3.List、Set、Map之间的区别是什么？
 2个方面区别比较：元素是否有序，元素是否重复。
-![](../pictures/List、Set、Map之间的区别.jpg)
+![](./pictures/List、Set、Map之间的区别.jpg)
 
 ## 4.HashMap JDK1.7和JDK1.8中发生了哪些变化（底层）？
 • JDK1.7中HashMap底层使用数组+链表，1.8中数组+链表+红黑树。加入红黑树后，HashMap插入和查询的效率得到提升。
